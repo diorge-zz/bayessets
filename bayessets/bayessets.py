@@ -4,7 +4,7 @@ from scipy.sparse import csr_matrix
 
 class BayesianSet:
     def __init__(self, dataset, alpha, beta):
-        self.X = csr_matrix(dataset.T)
+        self.X = csr_matrix(dataset)
         self.alpha = alpha
         self.beta = beta
         self.alpha_plus_beta = self.alpha + self.beta
@@ -43,6 +43,6 @@ class BayesianSet:
 
     @staticmethod
     def estimate_hyperparameters(c, dataset):
-        alpha = c * csr_matrix(dataset.T).mean(0)
+        alpha = c * dataset.mean(0)
         beta = c - alpha
         return alpha, beta
