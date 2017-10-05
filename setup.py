@@ -7,6 +7,11 @@ setup(
     name="BayesSets",
     version="0.1",
     packages=["bayessets"],
+    install_requires=[
+        'numpy>=1.13.3',
+        'scipy>=0.19.1'
+    ],
+
     author="Diorge Brognara",
     author_email="diorge.bs@gmail.com",
     description=DESCRIPTION,
