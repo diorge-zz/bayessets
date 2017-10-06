@@ -65,3 +65,19 @@ def test_wine():
     precision = truepositives / 10
     # allows a single mistake
     assert precision >= 0.9
+
+
+def test_query_many():
+    """Test for the query_many method
+    """
+    data = np.random.randn(20, 6)
+    bindata = Binarizer(threshold=0.5).fit_transform(data)
+    alpha, beta = BayesianSet.estimate_hyperparameters(2, bindata)
+    model = BayesianSet(bindata, alpha, beta)
+    individual = []
+    queries = [[0, 1, 2], [1, 2, 3], [2, 3, 4]]
+    for query in queries:
+        individual.append(model.query(query))
+    total = model.query_many(queries)
+    for rank in individual:
+        assert rank in total
