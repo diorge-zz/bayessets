@@ -2,7 +2,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 
-class BayesianSet:
+class BernoulliBayesianSet:
     def __init__(self, dataset, alpha, beta):
         self.X = csr_matrix(dataset)
         self.alpha = alpha

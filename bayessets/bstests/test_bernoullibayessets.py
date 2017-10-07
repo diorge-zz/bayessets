@@ -3,7 +3,7 @@
 
 
 from __future__ import division
-from bayessets import BayesianSet
+from bayessets import BernoulliBayesianSet
 import numpy as np
 import sklearn.datasets
 from sklearn.preprocessing import Normalizer, Binarizer
@@ -18,7 +18,7 @@ def test_hyperparameters_from_mean():
                      [0, 1, 0, 1]])
     means = np.array([0, 0.5, 0.25, 1])
     scale = 2
-    alpha, beta = BayesianSet.estimate_hyperparameters(scale, data)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(scale, data)
     assert np.all(alpha == (scale * means))
     assert np.all(beta == scale - alpha)
 
@@ -33,7 +33,7 @@ def test_hyperparameters_from_mean_unusual_scale():
                      [0, 1, 0, 1]])
     means = np.array([0, 0.5, 0.25, 1])
     scale = 15
-    alpha, beta = BayesianSet.estimate_hyperparameters(scale, data)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(scale, data)
     assert np.all(alpha == (scale * means))
     assert np.all(beta == scale - alpha)
 
@@ -54,10 +54,10 @@ def test_wine():
         binarizer = Binarizer(threshold=train_data[:, i].mean())
         bindata[:, i] = binarizer.fit_transform(train_data[:, i]
                                                 .reshape(-1, 1)).reshape(1, -1)
-    alpha, beta = BayesianSet.estimate_hyperparameters(2, bindata)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(2, bindata)
     alpha = alpha + 0.0001
     beta = beta + 0.0001
-    model = BayesianSet(bindata, alpha, beta)
+    model = BernoulliBayesianSet(bindata, alpha, beta)
     some_zero_class_indices = [0, 3, 5]
     ranking = np.argsort(model.query(some_zero_class_indices))[::-1]
     top10 = ranking[:10]
@@ -72,8 +72,8 @@ def test_query_many():
     """
     data = np.random.randn(20, 6)
     bindata = Binarizer(threshold=0.5).fit_transform(data)
-    alpha, beta = BayesianSet.estimate_hyperparameters(2, bindata)
-    model = BayesianSet(bindata, alpha, beta)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(2, bindata)
+    model = BernoulliBayesianSet(bindata, alpha, beta)
     individual = []
     queries = [[0, 1, 2], [1, 2, 3], [2, 3, 4]]
     for query in queries:

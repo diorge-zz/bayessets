@@ -1,1 +1,1 @@
-from .bayessets import BayesianSet
+from .bayessets import BernoulliBayesianSet
