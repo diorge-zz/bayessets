@@ -13,7 +13,7 @@ class BernoulliBayesianSet:
         self.log_alpha_plus_beta = np.log(self.alpha_plus_beta)
 
     def query(self, query_indices):
-        rankconstant, rankquery = self.compute_parameters(query_indices)
+        rankconstant, rankquery = self.compute_query_parameters(query_indices)
         log_scores = rankconstant + self.dataset * rankquery.transpose()
         return np.asarray(log_scores.flatten())[0]
 
@@ -21,7 +21,7 @@ class BernoulliBayesianSet:
         rankconstants = []
         rankqueries = []
         for query in queries:
-            rankconstant, rankquery = self.compute_parameters(query)
+            rankconstant, rankquery = self.compute_query_parameters(query)
             rankconstants.append(rankconstant)
             rankqueries.append(rankquery)
         rankconstants = np.array(rankconstants)
@@ -29,7 +29,7 @@ class BernoulliBayesianSet:
         score_matrix = rankconstants + self.dataset * rankqueries.T
         return score_matrix.T
 
-    def compute_parameters(self, query_indices):
+    def compute_query_parameters(self, query_indices):
         querysize = len(query_indices)
         sum_x = np.sum(self.dataset[query_indices], axis=0)
         alpha_tilde = sum_x + self.alpha
