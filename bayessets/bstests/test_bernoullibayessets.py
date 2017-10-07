@@ -12,15 +12,15 @@ from sklearn.preprocessing import Normalizer, Binarizer
 def test_hyperparameters_from_mean():
     """Tests the calculation of hyper-parameters alpha and beta
     """
-    data = np.array([[0, 0, 0, 1],
+    data = np.array([[1, 0, 0, 1],
                      [0, 1, 0, 1],
                      [0, 0, 1, 1],
-                     [0, 1, 0, 1]])
-    means = np.array([0, 0.5, 0.25, 1])
+                     [0, 1, 0, 0]])
+    means = np.array([0.25, 0.5, 0.25, 0.75])
     scale = 2
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(data, scale)
-    assert np.all(alpha == (scale * means))
-    assert np.all(beta == scale - alpha)
+    model = BernoulliBayesianSet(data, meanfactor=scale)
+    assert np.all(model.alpha == (scale * means))
+    assert np.all(model.beta == scale - model.alpha)
 
 
 def test_hyperparameters_from_mean_unusual_scale():
@@ -30,10 +30,11 @@ def test_hyperparameters_from_mean_unusual_scale():
     data = np.array([[0, 0, 0, 1],
                      [0, 1, 0, 1],
                      [0, 0, 1, 1],
-                     [0, 1, 0, 1]])
-    means = np.array([0, 0.5, 0.25, 1])
+                     [1, 1, 0, 0]])
+    means = np.array([0.25, 0.5, 0.25, 0.75])
     scale = 15
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(data, scale)
+    model = BernoulliBayesianSet(data, scale)
+    alpha, beta = model.alpha, model.beta
     assert np.all(alpha == (scale * means))
     assert np.all(beta == scale - alpha)
 
@@ -54,10 +55,8 @@ def test_wine():
         binarizer = Binarizer(threshold=train_data[:, i].mean())
         bindata[:, i] = binarizer.fit_transform(train_data[:, i]
                                                 .reshape(-1, 1)).reshape(1, -1)
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(bindata)
-    alpha = alpha + 0.0001
-    beta = beta + 0.0001
-    model = BernoulliBayesianSet(bindata, alpha, beta)
+    model = BernoulliBayesianSet(bindata, meanfactor=2,
+                                 alphaepsilon=0.0001, betaepsilon=0.0001)
     some_zero_class_indices = [0, 3, 5]
     ranking = np.argsort(model.query(some_zero_class_indices))[::-1]
     top10 = ranking[:10]
@@ -72,8 +71,7 @@ def test_query_many():
     """
     data = np.random.randn(20, 6)
     bindata = Binarizer(threshold=0.5).fit_transform(data)
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(bindata)
-    model = BernoulliBayesianSet(bindata, alpha, beta)
+    model = BernoulliBayesianSet(bindata)
     individual = []
     queries = [[0, 1, 2], [1, 2, 3], [2, 3, 4]]
     for query in queries:

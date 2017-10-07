@@ -3,10 +3,17 @@ from scipy.sparse import csr_matrix
 
 
 class BernoulliBayesianSet:
-    def __init__(self, dataset, alpha, beta):
+    def __init__(self, dataset, meanfactor=2, alpha=None, beta=None,
+                 alphaepsilon=0, betaepsilon=0):
         self.dataset = csr_matrix(dataset)
-        self.alpha = alpha
-        self.beta = beta
+        if alpha is None and beta is None:
+            self.alpha, self.beta = estimate_beta_parameters(dataset,
+                                                             meanfactor)
+        else:
+            self.alpha = alpha
+            self.beta = beta
+        self.alpha += alphaepsilon
+        self.beta += betaepsilon
         self.alpha_plus_beta = self.alpha + self.beta
         self.log_alpha = np.log(self.alpha)
         self.log_beta = np.log(self.beta)
@@ -44,8 +51,8 @@ class BernoulliBayesianSet:
                      log_beta_tilde + self.log_beta)
         return rankconstant, rankquery
 
-    @staticmethod
-    def estimate_hyperparameters(dataset, meanfactor=2):
-        alpha = meanfactor * dataset.mean(0)
-        beta = meanfactor - alpha
-        return alpha, beta
+
+def estimate_beta_parameters(dataset, meanfactor=2):
+    alpha = meanfactor * dataset.mean(0)
+    beta = meanfactor - alpha
+    return alpha, beta
