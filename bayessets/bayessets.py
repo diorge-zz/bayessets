@@ -45,7 +45,7 @@ class BernoulliBayesianSet:
         return rankconstant, rankquery
 
     @staticmethod
-    def estimate_hyperparameters(meanfactor, dataset):
+    def estimate_hyperparameters(dataset, meanfactor=2):
         alpha = meanfactor * dataset.mean(0)
         beta = meanfactor - alpha
         return alpha, beta

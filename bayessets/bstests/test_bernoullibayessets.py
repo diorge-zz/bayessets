@@ -18,7 +18,7 @@ def test_hyperparameters_from_mean():
                      [0, 1, 0, 1]])
     means = np.array([0, 0.5, 0.25, 1])
     scale = 2
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(scale, data)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(data, scale)
     assert np.all(alpha == (scale * means))
     assert np.all(beta == scale - alpha)
 
@@ -33,7 +33,7 @@ def test_hyperparameters_from_mean_unusual_scale():
                      [0, 1, 0, 1]])
     means = np.array([0, 0.5, 0.25, 1])
     scale = 15
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(scale, data)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(data, scale)
     assert np.all(alpha == (scale * means))
     assert np.all(beta == scale - alpha)
 
@@ -54,7 +54,7 @@ def test_wine():
         binarizer = Binarizer(threshold=train_data[:, i].mean())
         bindata[:, i] = binarizer.fit_transform(train_data[:, i]
                                                 .reshape(-1, 1)).reshape(1, -1)
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(2, bindata)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(bindata)
     alpha = alpha + 0.0001
     beta = beta + 0.0001
     model = BernoulliBayesianSet(bindata, alpha, beta)
@@ -72,7 +72,7 @@ def test_query_many():
     """
     data = np.random.randn(20, 6)
     bindata = Binarizer(threshold=0.5).fit_transform(data)
-    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(2, bindata)
+    alpha, beta = BernoulliBayesianSet.estimate_hyperparameters(bindata)
     model = BernoulliBayesianSet(bindata, alpha, beta)
     individual = []
     queries = [[0, 1, 2], [1, 2, 3], [2, 3, 4]]
