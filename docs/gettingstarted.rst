@@ -32,7 +32,7 @@ Scikit Learn will be required for some preprocessing and importing the data. ::
 
    wine = sklearn.datasets.load_wine()
 
-We will be using the :py:meth:`BernoulliBayesianSet`,
+We will be using the :py:class:`bayessets.BernoulliBayesianSet`,
 so we need to convert the data to binary.
 Here, we simply use the mean of each feature to binarize,
 after normalizing to the [0, 1] range. ::
@@ -51,7 +51,7 @@ we can train a model.
 Here we will assume the hyper-parameters
 to be two times the mean. ::
 
-   model = BernoulliBayesianSet(bindata, meanfactor=2,
+   model = bayessets.BernoulliBayesianSet(bindata, meanfactor=2,
                                 alphaepsilon=0.0001, betaepsilon=0.0001)
 
 Now we can query our model to find expansion to our query set.
