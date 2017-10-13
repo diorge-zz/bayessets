@@ -8,9 +8,11 @@ Welcome to bayessets's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :titlesonly:
    :caption: Contents:
 
    bernoullibayessets
+   gettingstarted
 
 
 
