@@ -6,6 +6,7 @@ The original paper [1] proposes a model for the exponential family of distributi
 and with greater detail a model using the independent Bernoulli distribution.
 
 The repository is available on PyPI and can be installed with `pip install bayessets`.
+The complete documentation can be found at [ReadTheDocs](http://bayessets.readthedocs.io/en/latest/).
 
 ## Basic usage
 
