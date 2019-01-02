@@ -98,7 +98,7 @@ class BernoulliBayesianSet:
         beta_tilde = self.beta + querysize - sum_x
         log_alpha_tilde = np.log(alpha_tilde)
         log_beta_tilde = np.log(beta_tilde)
-        rankconstant = (self.alpha_plus_beta -
+        rankconstant = (self.log_alpha_plus_beta -
                         np.log(self.alpha + self.beta + querysize) +
                         log_beta_tilde - self.log_beta
                         ).sum()
