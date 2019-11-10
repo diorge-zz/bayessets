@@ -5,7 +5,7 @@ DESCRIPTION = "Implementation of the Bayesian Sets algorithm and variants"
 
 setup(
     name="BayesSets",
-    version="0.2",
+    version="0.2.1",
     packages=["bayessets"],
     install_requires=[
         'numpy>=1.13.3',
